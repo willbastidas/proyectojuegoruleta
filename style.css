@@ -107,11 +107,18 @@ button:hover {
 .jugador {
     background-color: #fff;
     border: 2px solid #34495e;
-    padding: 10px 15px;
-    min-width: 150px;
-    text-align: center;
+    padding: 10px;
+    min-width: 170px;
     font-weight: bold;
     font-size: 14px;
+
+    /* Flexbox en columna para apilar nombre y botones */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    /* Espacio entre el nombre y los botones */
 }
 
 /* El primer jugador de cada enfrentamiento */
@@ -271,4 +278,88 @@ button:hover {
     min-height: 1.2em;
     /* Mantiene el espacio aunque esté vacío */
     margin: 15px 0;
+}
+
+.nombre {
+    text-align: center;
+    width: 100%;
+    word-break: break-word;
+    /* Por si el nombre es muy largo */
+}
+
+/* --- Botón de Ganador --- */
+.btn-win {
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-left: 10px;
+}
+
+.btn-win:hover {
+    background-color: #2ecc71;
+}
+
+.campeon {
+    justify-content: center;
+    /* Centra el texto del campeón */
+}
+
+.botones-container {
+    display: flex;
+    gap: 5px;
+    /* Espacio entre el botón de Juego y Partida */
+    width: 100%;
+    justify-content: center;
+}
+
+
+.botones-container {
+    display: flex;
+    gap: 5px;
+    /* Espacio entre el botón de Juego y Partida */
+    width: 100%;
+    justify-content: center;
+}
+
+/* Botones individuales */
+.btn-win-juego,
+.btn-win-partida {
+    color: white;
+    border: none;
+    padding: 6px 4px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+    flex: 1;
+    /* Hacen que ambos botones midan lo mismo */
+}
+
+/* Botón para ganar 1 juego (Azul) */
+.btn-win-juego {
+    background-color: #3498db;
+}
+
+.btn-win-juego:hover {
+    background-color: #2980b9;
+}
+
+/* Botón para ganar la partida y avanzar (Verde) */
+.btn-win-partida {
+    background-color: #27ae60;
+}
+
+.btn-win-partida:hover {
+    background-color: #2ecc71;
+}
+
+.campeon {
+    justify-content: center;
 }

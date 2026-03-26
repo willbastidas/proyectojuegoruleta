@@ -5,8 +5,8 @@ let formatoTorneo = '';
 let dueloActual = null;
 let rotacionAcumulada = 0;
 let juegosDisponibles = [];
+let contadorPartidas = 1;
 
-// Colores para la ruleta
 const coloresRuleta = ['#f1c40f', '#e74c3c', '#3498db', '#2ecc71', '#9b59b6', '#e67e22', '#1abc9c', '#34495e'];
 
 // --- ELEMENTOS DEL DOM ---
@@ -28,8 +28,8 @@ const btnIniciar = document.getElementById('btn-iniciar');
 const seccionConfig = document.getElementById('configuracion');
 const seccionTorneo = document.getElementById('seccion-torneo');
 const contenedorTorneo = document.getElementById('contenedor-torneo');
+const listaHistorico = document.getElementById('lista-historico');
 
-// Elementos de la Ruleta (Modal)
 const modalRuleta = document.getElementById('modal-ruleta');
 const btnCerrarModal = document.getElementById('cerrar-modal');
 const canvasRuleta = document.getElementById('canvas-ruleta');
@@ -37,7 +37,6 @@ const ctx = canvasRuleta ? canvasRuleta.getContext('2d') : null;
 const btnGirar = document.getElementById('btn-girar');
 const ruletaPantalla = document.getElementById('ruleta-pantalla');
 const juegoAsignado = document.getElementById('juego-asignado');
-
 
 // --- 1. LÓGICA DE INTERFAZ ---
 function generarInputsManuales() {
@@ -95,8 +94,7 @@ function leerArchivoExcel(file) {
     });
 }
 
-
-// --- 3. INICIAR EL TORNEO ---
+// --- 2. INICIAR EL TORNEO ---
 btnIniciar.addEventListener('click', async () => {
     listaParticipantes = [];
     listaJuegos = [];
@@ -120,8 +118,9 @@ btnIniciar.addEventListener('click', async () => {
     if (listaParticipantes.length < 3) return alert(`Solo detectamos ${listaParticipantes.length} participantes. Ingresa al menos 3.`);
     if (listaJuegos.length === 0) return alert('Por favor, ingresa al menos 1 juego.');
 
-    // Inicializamos los juegos disponibles al empezar el torneo
     juegosDisponibles = [...listaJuegos];
+    contadorPartidas = 1;
+    listaHistorico.innerHTML = '';
 
     formatoTorneo = listaParticipantes.length <= 5 ? 'Grupos' : 'Bracket';
     document.getElementById('titulo-formato').textContent = `Formato del Torneo: ${formatoTorneo} (${listaParticipantes.length} Jugadores)`;
@@ -132,12 +131,10 @@ btnIniciar.addEventListener('click', async () => {
     generarBracket();
 });
 
-
-// --- 4. LA RULETA DEL MODAL ---
+// --- 3. LA RULETA DEL MODAL ---
 function abrirSorteoDuelo(elementoTextoInfo) {
     dueloActual = elementoTextoInfo;
 
-    // Si la lista se quedó vacía, la recargamos para que el torneo pueda continuar
     if (juegosDisponibles.length === 0) {
         juegosDisponibles = [...listaJuegos];
         alert("¡Se han jugado todos los juegos! La ruleta se ha reiniciado para los siguientes duelos.");
@@ -220,8 +217,6 @@ canvasRuleta.addEventListener('transitionend', () => {
     if (indiceGanadorActual === -1) return;
 
     const juegoGanador = juegosDisponibles[indiceGanadorActual];
-
-    // AQUÍ ESTÁ LA MAGIA: Eliminamos el juego ganado de la lista disponible
     juegosDisponibles.splice(indiceGanadorActual, 1);
 
     ruletaPantalla.innerHTML = `🎉 <strong>${juegoGanador}</strong> 🎉`;
@@ -238,8 +233,7 @@ canvasRuleta.addEventListener('transitionend', () => {
     }, 2000);
 });
 
-
-// --- 5. GENERACIÓN DEL BRACKET Y LÓGICA DE AVANCE ---
+// --- 4. GENERACIÓN DEL BRACKET Y LÓGICA DE AVANCE ---
 function generarBracket() {
     let mezclados = [...listaParticipantes];
     mezclados.sort(() => Math.random() - 0.5);
@@ -263,9 +257,14 @@ function generarBracket() {
         divRonda.className = 'ronda';
 
         if (r === numRondas) {
+            // Caja del Campeón
             const cajaCampeon = document.createElement('div');
             cajaCampeon.className = 'jugador campeon';
-            cajaCampeon.textContent = '🏆 Campeón';
+            const spanCamp = document.createElement('span');
+            spanCamp.className = 'nombre';
+            spanCamp.textContent = '🏆 Campeón';
+
+            cajaCampeon.appendChild(spanCamp);
             estructuraNodos[r].push(cajaCampeon);
             divRonda.appendChild(cajaCampeon);
         } else {
@@ -275,15 +274,64 @@ function generarBracket() {
                 const divEnfrentamiento = document.createElement('div');
                 divEnfrentamiento.className = 'enfrentamiento';
 
+                // --- JUGADOR 1 ---
                 const j1 = document.createElement('div');
                 j1.className = 'jugador';
+
+                const spanJ1 = document.createElement('span');
+                spanJ1.className = 'nombre';
+
+                const divBotones1 = document.createElement('div');
+                divBotones1.className = 'botones-container';
+
+                const btnJuego1 = document.createElement('button');
+                btnJuego1.className = 'btn-win-juego';
+                btnJuego1.textContent = '🎮 Win Juego';
+
+                const btnPartida1 = document.createElement('button');
+                btnPartida1.className = 'btn-win-partida';
+                btnPartida1.textContent = '🏆 Win Partida';
+
+                divBotones1.appendChild(btnJuego1);
+                divBotones1.appendChild(btnPartida1);
+                j1.appendChild(spanJ1);
+                j1.appendChild(divBotones1);
+
+                // --- JUGADOR 2 ---
                 const j2 = document.createElement('div');
                 j2.className = 'jugador';
 
-                j1.style.cursor = "pointer";
-                j1.title = "Haz clic para avanzar a este jugador";
-                j2.style.cursor = "pointer";
-                j2.title = "Haz clic para avanzar a este jugador";
+                const spanJ2 = document.createElement('span');
+                spanJ2.className = 'nombre';
+
+                const divBotones2 = document.createElement('div');
+                divBotones2.className = 'botones-container';
+
+                const btnJuego2 = document.createElement('button');
+                btnJuego2.className = 'btn-win-juego';
+                btnJuego2.textContent = '🎮 Win Juego';
+
+                const btnPartida2 = document.createElement('button');
+                btnPartida2.className = 'btn-win-partida';
+                btnPartida2.textContent = '🏆 Win Partida';
+
+                divBotones2.appendChild(btnJuego2);
+                divBotones2.appendChild(btnPartida2);
+                j2.appendChild(spanJ2);
+                j2.appendChild(divBotones2);
+
+                // Mostrar/Ocultar botones iniciales
+                if (r === 0) {
+                    spanJ1.textContent = mezclados[e * 2];
+                    spanJ2.textContent = mezclados[e * 2 + 1];
+                    if (spanJ1.textContent === 'Libre') divBotones1.style.display = 'none';
+                    if (spanJ2.textContent === 'Libre') divBotones2.style.display = 'none';
+                } else {
+                    spanJ1.textContent = 'Ganador anterior';
+                    spanJ2.textContent = 'Ganador anterior';
+                    divBotones1.style.display = 'none';
+                    divBotones2.style.display = 'none';
+                }
 
                 const infoSorteo = document.createElement('span');
                 infoSorteo.className = 'info-juego';
@@ -296,16 +344,13 @@ function generarBracket() {
                 btnSorteo.textContent = "🎰 Sortear Juego";
                 btnSorteo.onclick = () => abrirSorteoDuelo(infoSorteo);
 
-                if (r === 0) {
-                    j1.textContent = mezclados[e * 2];
-                    j2.textContent = mezclados[e * 2 + 1];
-                } else {
-                    j1.textContent = 'Ganador anterior';
-                    j2.textContent = 'Ganador anterior';
-                }
+                // Eventos de los botones WIN JUEGO (Solo registra historial, no avanza)
+                btnJuego1.onclick = () => registrarGanadorJuego(spanJ1.textContent, divEnfrentamiento);
+                btnJuego2.onclick = () => registrarGanadorJuego(spanJ2.textContent, divEnfrentamiento);
 
-                j1.onclick = () => avanzarJugador(j1.textContent, r, e, 0);
-                j2.onclick = () => avanzarJugador(j2.textContent, r, e, 1);
+                // Eventos de los botones WIN PARTIDA (Avanza, bloquea y registra)
+                btnPartida1.onclick = () => avanzarJugador(spanJ1.textContent, r, e, 0, divEnfrentamiento, false);
+                btnPartida2.onclick = () => avanzarJugador(spanJ2.textContent, r, e, 1, divEnfrentamiento, false);
 
                 estructuraNodos[r].push({ caja1: j1, caja2: j2 });
 
@@ -321,26 +366,70 @@ function generarBracket() {
 
     contenedorTorneo.appendChild(divBracket);
 
-    function avanzarJugador(nombre, rondaActual, indexEnfrentamiento, posJugador) {
+    // Función para registrar solo un minijuego
+    function registrarGanadorJuego(nombre, divEnfrentamientoAct) {
         if (nombre === 'Ganador anterior' || nombre === 'Libre') return;
 
+        const infoSorteoAct = divEnfrentamientoAct.querySelector('.info-juego');
+        let juegoJugado = "No sorteado (Por defecto)";
+        if (infoSorteoAct) {
+            let txt = infoSorteoAct.textContent;
+            txt = txt.replace('🕹️', '').replace('Juego:', '').trim();
+            if (txt !== 'Pendiente') juegoJugado = txt;
+        }
+
+        const li = document.createElement('li');
+        li.style.borderBottom = "1px dashed #ccc";
+        li.style.padding = "4px 0";
+        li.style.marginLeft = "20px"; // Tabulación para que se vea como sub-elemento
+        li.innerHTML = `🎮 Juego: <span style="color:#3498db; font-weight:bold;">${juegoJugado}</span> ➔ Ganador: <span style="color:#27ae60; font-weight:bold;">${nombre}</span>`;
+        listaHistorico.appendChild(li);
+    }
+
+    // Función para avanzar en el bracket (Fin del match)
+    function avanzarJugador(nombre, rondaActual, indexEnfrentamiento, posJugador, divEnfrentamientoAct, esAutoLibre) {
+        if (nombre === 'Ganador anterior' || nombre === 'Libre') return;
+
+        // 1. Bloquear Duelo y Registrar Partida Completa
+        if (!esAutoLibre && divEnfrentamientoAct) {
+            // Seleccionar y eliminar TODOS los botones (sorteo, juego y partida)
+            const todosLosBotones = divEnfrentamientoAct.querySelectorAll('button');
+            todosLosBotones.forEach(b => b.remove());
+
+            const li = document.createElement('li');
+            li.style.borderBottom = "2px solid #bdc3c7";
+            li.style.padding = "10px 0";
+            li.style.marginTop = "10px";
+            li.style.backgroundColor = "#fdfefe";
+            li.innerHTML = `🚀 <strong>Match ${contadorPartidas} Resuelto:</strong> 🏆 <strong><span style="color:#f39c12">${nombre}</span></strong> avanza a la siguiente ronda.`;
+            listaHistorico.appendChild(li);
+            contadorPartidas++;
+        }
+
+        // 2. Mover al jugador a la siguiente caja
         const nextRonda = rondaActual + 1;
         const nextIndex = Math.floor(indexEnfrentamiento / 2);
         const vaArriba = (indexEnfrentamiento % 2 === 0);
 
         if (nextRonda === numRondas) {
-            estructuraNodos[nextRonda][0].textContent = '🏆 ' + nombre;
-            estructuraNodos[nextRonda][0].style.backgroundColor = '#f1c40f';
-            estructuraNodos[nextRonda][0].style.color = '#333';
+            const cajaCamp = estructuraNodos[nextRonda][0];
+            cajaCamp.querySelector('.nombre').textContent = '🏆 ' + nombre;
+            cajaCamp.style.backgroundColor = '#f1c40f';
+            cajaCamp.style.color = '#333';
         } else {
             const siguienteCaja = vaArriba ? estructuraNodos[nextRonda][nextIndex].caja1 : estructuraNodos[nextRonda][nextIndex].caja2;
-            siguienteCaja.textContent = nombre;
+            siguienteCaja.querySelector('.nombre').textContent = nombre;
             siguienteCaja.style.backgroundColor = '#d5f5e3';
 
+            // Mostrar sus nuevos botones en la siguiente ronda
+            const sBotones = siguienteCaja.querySelector('.botones-container');
+            if (sBotones) sBotones.style.display = 'flex';
+
             const oponente = vaArriba ? estructuraNodos[nextRonda][nextIndex].caja2 : estructuraNodos[nextRonda][nextIndex].caja1;
-            if (oponente.textContent === 'Libre') {
+            if (oponente.querySelector('.nombre').textContent === 'Libre') {
                 setTimeout(() => {
-                    avanzarJugador(nombre, nextRonda, nextIndex, vaArriba ? 0 : 1);
+                    const parentEnfrentamiento = siguienteCaja.parentElement;
+                    avanzarJugador(nombre, nextRonda, nextIndex, vaArriba ? 0 : 1, parentEnfrentamiento, true);
                 }, 400);
             }
         }
@@ -350,8 +439,10 @@ function generarBracket() {
         for (let e = 0; e < potencia / 2; e++) {
             const nom1 = mezclados[e * 2];
             const nom2 = mezclados[e * 2 + 1];
-            if (nom2 === 'Libre') avanzarJugador(nom1, 0, e, 0);
-            if (nom1 === 'Libre') avanzarJugador(nom2, 0, e, 1);
+            const parentDiv = estructuraNodos[0][e].caja1.parentElement;
+
+            if (nom2 === 'Libre') avanzarJugador(nom1, 0, e, 0, parentDiv, true);
+            if (nom1 === 'Libre') avanzarJugador(nom2, 0, e, 1, parentDiv, true);
         }
     }, 500);
 }
