@@ -1,0 +1,274 @@
+/* Estilos generales */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #2c3e50;
+}
+
+section {
+    background: #ffffff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Formularios y Botones */
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    margin-top: 15px;
+}
+
+textarea {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+}
+
+button {
+    display: block;
+    width: 100%;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 12px;
+    margin-top: 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+/* Clases de utilidad */
+.oculto {
+    display: none !important;
+}
+
+/* Pantalla de la ruleta */
+#ruleta-pantalla {
+    font-size: 24px;
+    text-align: center;
+    padding: 30px;
+    margin: 10px 0;
+    background-color: #ecf0f1;
+    border: 3px dashed #3498db;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+/* --- Estilos del Bracket --- */
+#contenedor-torneo {
+    overflow-x: auto;
+    /* Permite hacer scroll horizontal si hay muchos jugadores */
+    padding: 20px 0;
+}
+
+.bracket {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.ronda {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 100%;
+    margin-right: 40px;
+    position: relative;
+}
+
+.enfrentamiento {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 15px 0;
+    position: relative;
+}
+
+.jugador {
+    background-color: #fff;
+    border: 2px solid #34495e;
+    padding: 10px 15px;
+    min-width: 150px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* El primer jugador de cada enfrentamiento */
+.jugador:first-child {
+    border-bottom: 1px solid #bdc3c7;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+/* El segundo jugador de cada enfrentamiento */
+.jugador:last-child {
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+/* Estilo especial para el campeón */
+.campeon {
+    background-color: #f1c40f;
+    color: #333;
+    border-color: #f39c12;
+    border-radius: 5px;
+    font-size: 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Líneas conectoras (Simples) */
+.ronda:not(:last-child) .enfrentamiento::after {
+    content: '';
+    position: absolute;
+    right: -20px;
+    top: 50%;
+    width: 20px;
+    height: 2px;
+    background-color: #34495e;
+}
+
+
+/* Cuadrícula para inputs manuales */
+.grid-inputs {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.grid-inputs input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+
+/* --- Estilos de la Ruleta Visual --- */
+#contenedor-ruleta {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    margin: 20px auto;
+}
+
+#canvas-ruleta {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    /* La transición hace que el giro de JS se vea fluido y realista */
+    transition: transform 4s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+#puntero-ruleta {
+    position: absolute;
+    top: 50%;
+    right: -15px;
+    /* Lo ubicamos a la derecha */
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    /* Dibujamos un triángulo usando bordes de CSS */
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    border-right: 25px solid #e74c3c;
+    z-index: 10;
+}
+
+/* 2. El contenedor oscuro que cubre toda la pantalla */
+.modal {
+    position: fixed;
+    /* Superpone relativo a la ventana (viewport) */
+    z-index: 9999;
+    /* Un número muy alto para estar SOBRE el bracket y header */
+    left: 0;
+    top: 0;
+    width: 100vw;
+    /* 100% del ancho de la ventana */
+    height: 100vh;
+    /* 100% del alto de la ventana */
+    background-color: rgba(0, 0, 0, 0.8);
+    /* Fondo negro con 80% de opacidad */
+
+    /* Centrado perfecto del contenido interior */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /* Pequeña animación de entrada suave */
+    backdrop-filter: blur(3px);
+    /* Opcional: difumina ligeramente el bracket detrás */
+    transition: opacity 0.3s ease;
+}
+
+/* 3. La caja blanca con el contenido (Ruleta) */
+.modal-contenido {
+    background-color: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    position: relative;
+    max-width: 400px;
+    /* Ancho máximo para que no se vea gigante en PC */
+    width: 90%;
+    /* Se adapta a móviles */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    /* Sombra para dar profundidad */
+
+    /* Evita que el contenido sea más alto que la pantalla */
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+/* 4. Botón de cerrar (X) en la esquina */
+#cerrar-modal {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #aaa;
+    cursor: pointer;
+    line-height: 1;
+}
+
+#cerrar-modal:hover {
+    color: #e74c3c;
+    /* Se pone rojo al pasar el mouse */
+}
+
+/* Estilos extra para los elementos dentro del modal */
+#modal-ruleta h2 {
+    margin-top: 0;
+    font-size: 20px;
+    color: #2c3e50;
+}
+
+#juego-asignado {
+    font-size: 18px;
+    min-height: 1.2em;
+    /* Mantiene el espacio aunque esté vacío */
+    margin: 15px 0;
+}

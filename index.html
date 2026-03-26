@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creador de Torneos Multijuego</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+
+<body>
+    <header>
+        <h1>Generador de Torneos</h1>
+    </header>
+
+    <main>
+        <section id="configuracion">
+            <h2>1. Configuración Inicial</h2>
+
+            <label for="cantidad-participantes">Cantidad de participantes:</label>
+            <input type="number" id="cantidad-participantes" min="3" value="8"
+                style="width: 100%; padding: 10px; margin-bottom: 15px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px;">
+
+            <label>Método de ingreso de nombres:</label>
+            <div style="margin-bottom: 15px;">
+                <input type="radio" id="ingreso-manual" name="metodo-ingreso" value="manual" checked>
+                <label for="ingreso-manual"
+                    style="display:inline; font-weight:normal; margin-right: 15px;">Manual</label>
+
+                <input type="radio" id="ingreso-excel" name="metodo-ingreso" value="excel">
+                <label for="ingreso-excel" style="display:inline; font-weight:normal;">Subir Excel / CSV</label>
+            </div>
+
+            <div id="contenedor-manual">
+                <p style="font-weight: bold; margin-bottom: 10px; font-size: 14px; color: #555;">Ingresa los nombres:
+                </p>
+                <div id="lista-inputs-manual" class="grid-inputs">
+                </div>
+            </div>
+
+            <div id="contenedor-excel" class="oculto">
+                <label for="archivo-excel" style="font-size: 14px; color: #555;">Sube tu archivo (.xlsx o .csv):</label>
+                <input type="file" id="archivo-excel" accept=".xlsx, .xls, .csv"
+                    style="margin-bottom: 10px; width: 100%;">
+                <p style="margin-top: 0;"><small>Nota: El archivo debe tener los nombres en la primera columna.</small>
+                </p>
+            </div>
+
+            <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ddd;">
+
+            <h3 style="margin-top: 30px; font-size: 18px; color: #2c3e50;">2. Juegos a elegir</h3>
+
+            <label for="cantidad-juegos">Cantidad de juegos:</label>
+            <input type="number" id="cantidad-juegos" min="1" value="4"
+                style="width: 100%; padding: 10px; margin-bottom: 15px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px;">
+
+            <label>Método de ingreso de juegos:</label>
+            <div style="margin-bottom: 15px;">
+                <input type="radio" id="ingreso-juego-manual" name="metodo-juego" value="manual" checked>
+                <label for="ingreso-juego-manual"
+                    style="display:inline; font-weight:normal; margin-right: 15px;">Manual</label>
+
+                <input type="radio" id="ingreso-juego-excel" name="metodo-juego" value="excel">
+                <label for="ingreso-juego-excel" style="display:inline; font-weight:normal;">Subir Excel / CSV</label>
+            </div>
+
+            <div id="contenedor-juego-manual">
+                <p style="font-weight: bold; margin-bottom: 10px; font-size: 14px; color: #555;">Ingresa los juegos:</p>
+                <div id="lista-inputs-juegos" class="grid-inputs">
+                </div>
+            </div>
+
+            <div id="contenedor-juego-excel" class="oculto">
+                <label for="archivo-excel-juegos" style="font-size: 14px; color: #555;">Sube tu archivo (.xlsx o
+                    .csv):</label>
+                <input type="file" id="archivo-excel-juegos" accept=".xlsx, .xls, .csv"
+                    style="margin-bottom: 10px; width: 100%;">
+                <p style="margin-top: 0;"><small>Nota: El archivo debe tener los juegos en la primera columna.</small>
+                </p>
+            </div>
+
+            <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ddd;">
+
+            <button id="btn-iniciar" style="margin-top: 20px;">Crear Torneo</button>
+        </section>
+
+        <section id="seccion-torneo" class="oculto">
+            <h2 id="titulo-formato">Formato del Torneo</h2>
+            <div id="contenedor-torneo">
+            </div>
+        </section>
+
+        <div id="modal-ruleta" class="modal oculto">
+            <div class="modal-contenido">
+                <span id="cerrar-modal">&times;</span>
+                <h2>Sorteo para el Duelo</h2>
+                <div id="contenedor-ruleta">
+                    <canvas id="canvas-ruleta" width="300" height="300"></canvas>
+                    <div id="puntero-ruleta"></div>
+                </div>
+                <div id="ruleta-pantalla" style="margin-top: 20px; margin-bottom: 20px;">¡Gira para elegir el juego!
+                </div>
+                <button id="btn-girar">Girar Ruleta</button>
+                <p id="juego-asignado" style="font-weight: bold; color: #27ae60; margin-top: 10px;"></p>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
