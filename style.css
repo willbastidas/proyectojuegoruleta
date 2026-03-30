@@ -3,7 +3,7 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f4f7f6;
     color: #333;
-    max-width: 800px;
+    max-width: 80%;
     margin: 0 auto;
     padding: 20px;
 }
@@ -362,4 +362,55 @@ button:hover {
 
 .campeon {
     justify-content: center;
+}
+
+.grupo-card {
+    background: #fdfefe;
+    border: 2px solid #bdc3c7;
+    border-radius: 8px;
+    padding: 15px;
+    flex: 1;
+    min-width: 320px;
+    max-width: 400px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.grupo-title {
+    text-align: center;
+    background: #34495e;
+    color: white;
+    padding: 8px;
+    border-radius: 4px;
+    margin-top: 0;
+}
+
+.grupo-partidos {
+    max-height: 400px;
+    /* Si hay muchos partidos, crea scroll */
+    overflow-y: auto;
+    margin-bottom: 15px;
+    padding-right: 5px;
+}
+
+.grupo-seleccion {
+    border-top: 2px dashed #ccc;
+    padding-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.grupo-seleccion label {
+    margin: 0;
+    font-weight: normal;
+    font-size: 15px;
+    cursor: pointer;
+    background: #ecf0f1;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.grupo-seleccion label:hover {
+    background: #d5dbdb;
 }

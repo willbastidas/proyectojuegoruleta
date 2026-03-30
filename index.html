@@ -67,8 +67,7 @@
 
             <div id="contenedor-juego-manual">
                 <p style="font-weight: bold; margin-bottom: 10px; font-size: 14px; color: #555;">Ingresa los juegos:</p>
-                <div id="lista-inputs-juegos" class="grid-inputs">
-                </div>
+                <div id="lista-inputs-juegos" class="grid-inputs"></div>
             </div>
 
             <div id="contenedor-juego-excel" class="oculto">
@@ -76,19 +75,39 @@
                     .csv):</label>
                 <input type="file" id="archivo-excel-juegos" accept=".xlsx, .xls, .csv"
                     style="margin-bottom: 10px; width: 100%;">
-                <p style="margin-top: 0;"><small>Nota: El archivo debe tener los juegos en la primera columna.</small>
-                </p>
             </div>
 
             <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ddd;">
 
-            <button id="btn-iniciar" style="margin-top: 20px;">Crear Torneo</button>
+            <h3 style="margin-top: 30px; font-size: 18px; color: #2c3e50;">3. Formato del Torneo</h3>
+            <select id="tipo-formato"
+                style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; margin-bottom: 20px;">
+                <option value="bracket">Eliminación Directa (Bracket Inmediato)</option>
+                <option value="grupos">Fase de Grupos + Bracket (Mínimo 8 jugadores)</option>
+            </select>
+
+            <button id="btn-iniciar">Crear Torneo</button>
+        </section>
+
+        <section id="seccion-grupos" class="oculto">
+            <h2>Fase de Grupos</h2>
+            <p style="text-align: center; color: #7f8c8d; margin-bottom: 20px;">Juega los partidos de cada grupo. Al
+                finalizar, marca las casillas de los jugadores que avanzan (Primeros, segundos y mejores terceros) y
+                presiona el botón al final.</p>
+
+            <div id="contenedor-grupos" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
+            </div>
+
+            <div style="margin-top: 30px; text-align: center; background: #ecf0f1; padding: 20px; border-radius: 8px;">
+                <button id="btn-ir-bracket"
+                    style="background-color: #8e44ad; width: auto; padding: 15px 40px; display: inline-block;">Generar
+                    Bracket Final con los Seleccionados</button>
+            </div>
         </section>
 
         <section id="seccion-torneo" class="oculto">
-            <h2 id="titulo-formato">Formato del Torneo</h2>
-            <div id="contenedor-torneo">
-            </div>
+            <h2 id="titulo-formato">Bracket Final</h2>
+            <div id="contenedor-torneo"></div>
 
             <div id="historico-container"
                 style="margin-top: 40px; padding: 20px; background: #fff; border: 2px solid #bdc3c7; border-radius: 8px;">
